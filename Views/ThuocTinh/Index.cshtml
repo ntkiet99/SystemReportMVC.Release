@@ -120,22 +120,28 @@
                                         <div id="test-l-2" class="content dstepper-none fade">
                                             <fieldset>
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="tf1">Số dòng</label>
                                                             <input type="text" class="form-control" name="Row" id="Row" />
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="tf1">Số cột</label>
                                                             <input type="text" class="form-control" name="Col" id="Col" />
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="tf1">Chiều rộng</label>
                                                             <input type="text" class="form-control" name="Width" id="Width" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="tf1">Thứ tự</label>
+                                                            <input type="text" class="form-control" name="ThuTu" id="ThuTu" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -252,6 +258,7 @@
                     $('#Row').val(response.Row);
                     $('#Col').val(response.Col);
                     $('#Width').val(response.Width);
+                    $('#ThuTu').val(response.ThuTu);
                 },
                 error: function (xhr, status) {
                     alert(status);
@@ -283,12 +290,14 @@
                                 console.log(response);
                                 $("#renderTable thead").html("");
                                 const max = response.reduce((prev, current) => (prev.Level > current.Level) ? prev.Level : current.Level);
-                                for (var i = 0; i <= max; i++) {
+                                console.log("max", max);
+                                var checkNumber = Number.isInteger(max) ? max : 0;
+                                for (var i = 0; i <= checkNumber; i++) {
                                     var str = "<tr>";
                                     response[i].ThuocTinhs.map(function (value, index) {
                                         var row = value.Row?value.Row:1;
                                         var col = value.Col?value.Col:1;
-                                        var width = value.width ? value.Width : 1;
+                                        var width = value.Width ? value.Width : 1;
                                         var title = value.TenThuocTinh ? value.TenThuocTinh : "";
                                         str += `<th colspan="${col}" rowspan=${row} style="width: ${width}px; text-align: center;"> ${title} </th>`;
                                     });
@@ -348,7 +357,7 @@
             plugins: ['types', 'contextmenu'],
             core: {
                 data: {
-                    url: '/@ControllerName/LoadTreeDonVi',
+                    url: '/@ControllerName/LoadTreeDonVi/@ViewBag.MauBieuId',
                     data: function data(node) {
                         return {
                             id: node.id
